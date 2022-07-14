@@ -18,10 +18,9 @@
         <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
         <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
         <!-- CSS Files -->
-        <link id="pagestyle" href="{{ asset('assets/css/soft-ui-dashboard.css?v=1.0.5') }}" rel="stylesheet" />
+        <link id="pagestyle" href="{{ asset('assets/css/soft-ui-dashboard.css') }}" rel="stylesheet" />
         <link href="{{ asset('assets/css/select2.min.css') }}" rel="stylesheet" />
         <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
-        {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> --}}
         <style>
             .async-hide {
             opacity: 0 !important
@@ -163,7 +162,7 @@
                 <div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div>
             </div>
         </div>
-        <aside style="overflow: scroll" class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3" id="sidenav-main">
+        <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3" id="sidenav-main">
             <div class="sidenav-header">
                 <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
                 <a class="navbar-brand m-0" href="{{ route('home') }}" target="_blank">
@@ -173,7 +172,7 @@
             </div>
             <hr class="horizontal dark mt-0">
             <?php $pageName =  explode('.', Request::route()->getName())[0] ?>
-            <div class="collapse navbar-collapse  w-auto " style="height: 100%; overflow: hidden;" id="sidenav-collapse-main">
+            <div class="collapse navbar-collapse w-auto h-auto" id="sidenav-collapse-main">
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link {{ $pageName == 'home' || '' ? 'active' : '' }}" href="{{ route('home') }}">
@@ -628,7 +627,7 @@
         <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
         <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
         <script src="{{ asset('assets/js/plugins/chartjs.min.js') }}"></script>
-        <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
+        {{-- <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script> --}}
         <script src="{{ asset('assets/js/select2.min.js') }}"></script>
         <script>
             var ctx = document.getElementById("chart-bars").getContext("2d");
@@ -821,7 +820,6 @@
             $(document).ready(function () {
                 var success = "{{ Session::has('success') }}";
                 if (success) {
-                    console.log(true);
                     $.notify({
                         // options
                         title: '<strong>Success</strong>',message: "<br> {{ Session::get('success') }}",
@@ -854,7 +852,6 @@
                 }
                 var error = "{{ Session::has('error') }}";
                 if (error) {
-                    console.log(true);
                     $.notify({
                         // options
                         title: '<strong>Error</strong>',message: "<br> <br> {{ Session::get('error') }}",
@@ -887,7 +884,6 @@
                 }
                 var warning = "{{ Session::has('warning') }}";
                 if (warning) {
-                    console.log(true);
                     $.notify({
                         // options
                         title: '<strong>Warning</strong>',message: "<br> <br> {{ Session::get('warning') }}",

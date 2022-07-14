@@ -126,6 +126,12 @@
       </div>
     </div>
   </div>
+  {{-- <div class="col-lg-12">
+    <dl class="row p-4">
+      <dt class="col-sm-3">Total</dt>
+      <dd class="col-sm-9">Total Cylinders</dd>
+    </dl>
+  </div> --}}
   <div class="col-lg-6 mb-lg-0 mb-4">
     <div class="card my-3">
       <div class="card-body p-3">

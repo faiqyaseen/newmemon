@@ -26,9 +26,6 @@
               <tbody>
                   @foreach ($records as $key => $record)
                   <tr>
-                    <td class="align-middle text-center">
-                      <span class="text-secondary text-xs font-weight-bold">{{ $key+1 }}</span>
-                    </td>
                     <td class="align-middle">
                       <a href="{{ route('payments.show', $record['customer_id']) }}" class="text-primary font-weight-bold text-xs me-2" data-toggle="tooltip" data-original-title="Show order">
                           <i class="fas fa-eye"></i>
@@ -42,13 +39,24 @@
                       <form id="deleteForm{{ $record->order_id }}" method="POST" action="{{ route('orders.destroy', $record->order_id) }}">
                         @csrf
                         @method('DELETE')
-                    </form>
-                  </td> --}}
-                  <td class="align-middle text-center">
-                    <span class="text-secondary text-xs font-weight-bold">{{ $record->order_id != 0 ? '#'.$record->order_id : 'Not a order' }}</span>
+                      </form> --}}
                   </td>
                   <td class="align-middle text-center">
-                    <span class="text-danger text-xs font-weight-bold">{{ $record->order_type == 1 ? 'Cylinder Order' : 'Other' }}</span>
+                    <span class="text-secondary text-xs font-weight-bold">{{ $key+1 }}</span>
+                  </td>
+                  <td class="align-middle text-center">
+                    <a href="{{ $record->order_id != 0 ? route('orders.show', $record->order_id) : 'javascript:;' }}" class="text-secondary text-xs font-weight-bold">{{ $record->order_id != 0 ? '#'.$record->order_id : 'Not a order' }}</a>
+                  </td>
+                  <td class="align-middle text-center">
+                    <span class="text-danger text-xs font-weight-bold">
+                      @if ($record->order_type == 1)
+                      Cylinder Order
+                      @elseif ($record->order_type == 2)
+                      Recieved Order
+                      @else
+                      Other
+                      @endif
+                    </span>
                   </td>
                   <td class="align-middle text-center">
                     <span class="text-secondary text-xs font-weight-bold">{{ $record->payment }}</span>

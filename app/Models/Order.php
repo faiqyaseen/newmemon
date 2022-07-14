@@ -56,4 +56,17 @@ class Order extends Model
             ->orderBy('orders.id', 'DESC');
         return $query;
     }
+
+    public static function getCutomerName($where = [])
+    {
+        $query = self::selectRaw("
+            cust.first_name firstname,
+            cust.last_name lastname,
+            cust.email email
+        ")->leftJoin('customers as cust', 'cust.id', '=', 'orders.customer_id')
+           ->where($where)
+           ->get();
+
+        return $query;
+    }
 }

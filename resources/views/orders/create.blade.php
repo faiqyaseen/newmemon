@@ -87,8 +87,8 @@
                             @enderror
                         </div>
                         <div class="col-md-3">
-                            <p>Total Domestic (11.8) Rate: <span id="txt_dom"></span></p>
-                            <p>After Discount Domestic (11.8) Rate: <span id="txt_ddom"></span></p>
+                            <p>Total Domestic (11.8) Rate: <b id="txt_dom"></b></p>
+                            <p>After Discount Domestic (11.8) Rate: <b id="txt_ddom"></b></p>
                         </div>
                     </div>
                 </div>
@@ -116,8 +116,8 @@
                             @enderror
                         </div>
                         <div class="col-md-3">
-                            <p>Total Domestic (6) Rate: <span id="txt_dom6"></span></p>
-                            <p>After Discount Domestic (6) Rate: <span id="txt_ddom6"></span></p>
+                            <p>Total Domestic (6) Rate: <b id="txt_dom6"></b></p>
+                            <p>After Discount Domestic (6) Rate: <b id="txt_ddom6"></b></p>
                         </div>
                     </div>
                 </div>
@@ -126,10 +126,10 @@
                         <h6 class="">Total Rate:<span id="txt_total"></span></h6>
                     </div>
                     <div class="col-md-4">
-                        <h6 class="">Total Discount:<span id="txt_dis"></span></h6>
+                        <h6 class="">Total Discount:<b id="txt_dis"></b></h6>
                     </div>
                     <div class="col-md-4">
-                        <h6 class="">After Discount Rate:<span id="txt_dtotal"></span></h6>
+                        <h6 class="">After Discount Rate:<b id="txt_dtotal"></b></h6>
                     </div>
                 </div>
                 <div class="form-group">
@@ -143,13 +143,13 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <h6 class="">Remaining Amount: <span id="remaining"></span></h6>
+                        <h6 class="">Remaining Amount: <b id="remaining"></b></h6>
                     </div>
                     <div class="col-md-4">
-                        <h6 class="">Total With Remainings Amount: <span id="tremaining"></span></h6>
+                        <h6 class="">Total With Remainings Amount: <b id="tremaining"></b></h6>
                     </div>
                     <div class="col-md-4">
-                        <h6 class="">After Payment Remainings: <span id="pay_remaining"></span></h6>
+                        <h6 class="">After Payment Remainings: <b id="pay_remaining"></b></h6>
                     </div>
                 </div>
                 <h4>Others Information</h4>
@@ -294,15 +294,29 @@
         $("#pay_remaining").html(pay_remaining)
     }
 
-    $("#commercial").on("keyup", function(){totalRate()})
-    $("#commercial_discount").on("keyup", function(){totalRate()})
-    $("#domestic").on("keyup", function(){totalRate()})
-    $("#domestic_discount").on("keyup", function(){totalRate()})
-    $("#domestic6").on("keyup", function(){totalRate()})
-    $("#domestic6_discount").on("keyup", function(){totalRate()})
-    $("#domestic10").on("keyup", function(){totalRate()})
-    $("#domestic10_discount").on("keyup", function(){totalRate()})
-    $("#pay").on("keyup", function(){totalRate()})
+    // $("#commercial").on("keyup", function(){totalRate()})
+    // $("#commercial_discount").on("keyup", function(){totalRate()})
+    // $("#domestic").on("keyup", function(){totalRate()})
+    // $("#domestic_discount").on("keyup", function(){totalRate()})
+    // $("#domestic6").on("keyup", function(){totalRate()})
+    // $("#domestic6_discount").on("keyup", function(){totalRate()})
+    // $("#domestic10").on("keyup", function(){totalRate()})
+    // $("#domestic10_discount").on("keyup", function(){totalRate()})
+    // $("#pay").on("keyup", function(){totalRate()})
+
+    $("body").on('keyup',
+        `#commercial,
+        #commercial_discount,
+        #domestic,
+        #domestic_discount,
+        #domestic6,
+        #domestic6_discount,
+        #domestic10,
+        #domestic10_discount,
+        #pay`, function () {
+            totalRate();
+        }
+    )
 
     $("#today_rate").on("keyup", function () {
         let today_rate = $("#today_rate").val()

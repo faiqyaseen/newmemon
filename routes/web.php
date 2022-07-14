@@ -49,6 +49,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::macro('orders', function ($uri, $controller) {
         Route::put("{$uri}/{order}/confirm", ["{$controller}", "confirm"])->name("{$uri}.confirm");
         Route::get("/order/remainings", ["{$controller}", "remainings"])->name("{$uri}.remainings");
+        Route::get("{$uri}/customer_name", ["{$controller}", "getCustomerName"])->name("{$uri}.customer_name");
+        Route::post("{$uri}/recieve", ["{$controller}", "recievePaymentsAndEmpties"])->name("{$uri}.recieve");
         Route::resource($uri, $controller);
     });
     Route::cylinders('cylinders', CylinderController::class);
@@ -57,5 +59,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('payments', PaymentController::class);
     Route::resource('purchases', PurchaseController::class);
     Route::resource('sales', SaleController::class);
-    Route::resource('empties', CylinderEmptyController::class);
+    Route::macro('empties', function ($uri, $controller) {
+        Route::get("{$uri}/recieve", ["{$controller}", "recieve"])->name("{$uri}.recieve");
+        Route::post("{$uri}/recieved", ["{$controller}", "recieved"])->name("{$uri}.recieved");
+        Route::resource($uri, $controller);
+    });
+    Route::empties('empties', CylinderEmptyController::class);
 });

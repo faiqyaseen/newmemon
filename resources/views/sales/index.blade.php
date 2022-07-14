@@ -97,7 +97,7 @@
                                     <span class="text-secondary text-xs font-weight-bold">{{ explode(';', $record->remarks)[4] }}</span>
                                 </td>
                                 <td class="align-middle text-center">
-                                    <span class="text-secondary text-xs font-weight-bold">{{ dateToString( $record->in_out_date) }}</span>
+                                    <span class="text-secondary text-xs font-weight-bold">{{ dateToString( $record->sale_purchase_date) }}</span>
                                 </td>
                                 <td class="align-middle text-center">
                                     <span class="text-secondary text-xs font-weight-bold">{{ dateForHumans($record->created_at) }}</span>

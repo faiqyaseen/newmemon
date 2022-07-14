@@ -16,7 +16,8 @@ class payment extends Model
         'payment'
     ];
 
-    public static function getPaymentWithCustomers($where = []) {
+    public static function getPaymentWithCustomers($where = [])
+    {
         $query = self::selectRaw('
            cust.first_name as customer_first_name,
            cust.last_name as customer_last_name,
@@ -34,6 +35,18 @@ class payment extends Model
             ->leftJoin('customers as cust', 'cust.id', '=', 'payments.customer_id')
             ->where($where)
             ->orderBy('cust.id', 'ASC');
+        return $query;
+    }
+
+    public static function getMoneyRecord($where = [])
+    {
+        $query = self::selectRaw("
+        IFNULL((SELECT SUM(payment) FROM payments), 0) + IFNULL((SELECT SUM(credit) FROM sales_purchases WHERE sale_purchase = 0), 0) - IFNULL((SELECT SUM(credit) FROM sales_purchases WHERE sale_purchase = 1), 0) AS present_payment,
+        IFNULL((SELECT SUM(payment) FROM payments), 0) + IFNULL((SELECT SUM(credit) FROM sales_purchases WHERE sale_purchase = 0), 0) AS total_payment,
+        IFNULL((SELECT SUM(payment) FROM payments WHERE DATE(payments.created_at) = CURRENT_DATE()), 0) + IFNULL((SELECT SUM(credit) FROM sales_purchases WHERE sale_purchase = 0 AND DATE(sales_purchases.created_at) = CURRENT_DATE()), 0) AS today_payment,
+        IFNULL((SELECT SUM(payment) FROM payments WHERE DATE(payments.created_at) = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)), 0) + IFNULL((SELECT SUM(credit) FROM sales_purchases WHERE sale_purchase = 0 AND DATE(sales_purchases.created_at) = DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY)), 0) AS previousday_payment
+        ")->first();
+
         return $query;
     }
 }

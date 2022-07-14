@@ -8,10 +8,10 @@
                 <span class="btn-inner--text">Go Back</span>
                 <span class="btn-inner--icon"><i class="fas fa-arrow-left"></i></span>
             </a>
-          <h6>Give Empties</h6>
+          <h6>Recieve Empties</h6>
         </div>
         <div class="card-body">
-            <form action="{{ route('empties.store') }}" method="POST">
+            <form action="{{ route('empties.recieved') }}" method="POST">
                 @method('POST')
                 @csrf
                 <div class="form-group">
@@ -62,7 +62,7 @@
                         </div>
                     </div>
                 </div>
-                <input type="submit" value="Give Empties" class="btn btn-danger">
+                <input type="submit" value="Recieve Empties" class="btn btn-success">
             </form>
         </div>
       </div>

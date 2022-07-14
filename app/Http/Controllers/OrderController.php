@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCylOrderRequest;
 use App\Models\Customer;
 use App\Models\Cylinder;
+use App\Models\CylinderEmpty;
 use App\Models\Order;
 use App\Models\OrdersProduct;
 use App\Models\Payment;
@@ -406,13 +407,15 @@ class OrderController extends Controller
             Order::where('id', $id)->update(['status' => 1]);
             $order = Order::where('id', $id)->first();
             if (!Payment::where(['order_id' => $id, 'order_type' => 1])->exists()) {
-                // Creating payment for order 
-                Payment::create([
-                    'payment' => $order->cash_amount,
-                    'order_id' => $id,
-                    'order_type' => 1,
-                    'customer_id' => $order->customer_id,
-                ]);
+                // Creating payment for order
+                if (Order::where('id', $id)->pluck('cash_amount')->first() > 0) {
+                    Payment::create([
+                        'payment' => $order->cash_amount,
+                        'order_id' => $id,
+                        'order_type' => 1,
+                        'customer_id' => $order->customer_id,
+                    ]);
+                }
             }else {
                 // Adding cash amount to payment because payment has already been created for this order
                 if ($order->cash_amount != 0.00) {
@@ -422,10 +425,12 @@ class OrderController extends Controller
                 }
             }
 
+            $dt = date('Y-m-d H:i:s');
             $commercial_count = OrdersProduct::where(['order_id' => $id, 'type' => 1])->count();
             $domestic_count = OrdersProduct::where(['order_id' => $id, 'type' => 2])->count();
             $domestic6_count = OrdersProduct::where(['order_id' => $id, 'type' => 3])->count();
             $domestic10_count = OrdersProduct::where(['order_id' => $id, 'type' => 4])->count();
+            $empties = [];
 
             if ($commercial_count > 0) {
                 Cylinder::where([
@@ -436,6 +441,14 @@ class OrderController extends Controller
                     'branch_id' => 1,
                     'type' => 1
                 ])->limit($commercial_count)->orderByDesc('id')->update(['assign_to' => $order->customer_id]);
+
+                CylinderEmpty::create([
+                    'type' => 0,
+                    'cylinder_type' => 1,
+                    'customer_id' => $order->customer_id,
+                    'order_id' => $id,
+                    'quantity' => $commercial_count,
+                ]);
             }
 
             if ($domestic_count > 0) {
@@ -447,6 +460,14 @@ class OrderController extends Controller
                     'branch_id' => 1,
                     'type' => 2
                 ])->limit($domestic_count)->orderByDesc('id')->update(['assign_to' => $order->customer_id]);
+
+                CylinderEmpty::create([
+                    'type' => 0,
+                    'cylinder_type' => 2,
+                    'customer_id' => $order->customer_id,
+                    'order_id' => $id,
+                    'quantity' => $domestic_count,
+                ]);
             }
 
             if ($domestic6_count > 0) {
@@ -458,6 +479,14 @@ class OrderController extends Controller
                     'branch_id' => 1,
                     'type' => 3
                 ])->limit($domestic6_count)->orderByDesc('id')->update(['assign_to' => $order->customer_id]);
+
+                CylinderEmpty::create([
+                    'type' => 0,
+                    'cylinder_type' => 3,
+                    'customer_id' => $order->customer_id,
+                    'order_id' => $id,
+                    'quantity' => $domestic6_count,
+                ]);
             }
 
             if ($domestic10_count > 0) {
@@ -469,6 +498,14 @@ class OrderController extends Controller
                     'branch_id' => 1,
                     'type' => 4
                 ])->limit($domestic10_count)->orderByDesc('id')->update(['assign_to' => $order->customer_id]);
+
+                CylinderEmpty::create([
+                    'type' => 0,
+                    'cylinder_type' => 4,
+                    'customer_id' => $order->customer_id,
+                    'order_id' => $id,
+                    'quantity' => $domestic10_count,
+                ]);
             }
         }
 
@@ -492,5 +529,103 @@ class OrderController extends Controller
 
         $remaining = $total_amount - $total_paid;
         return response()->json($remaining);
+    }
+
+    public function getCustomerName(Request $request)
+    {
+        $id = $request->id;
+        return Order::getCutomerName(['orders.id' => $id])->first();
+    }
+
+    public function recievePaymentsAndEmpties(Request $request)
+    {
+        $order_id = $request->orderId;
+        $customer_id = Order::where('id', $order_id)->pluck('customer_id')->first();
+        $commercial = $request->commercial;
+        $domestic = $request->domestic;
+        $domestic6 = $request->domestic6;
+        $domestic10 = $request->domestic10;
+        $amount = $request->amount;
+
+        if ($commercial != '' || $commercial != 0) {
+            if ($commercial > 0 ) {
+                Cylinder::where([
+                    'assign_to' => $customer_id,
+                    'type' => 1
+                ])->limit($commercial)->orderByDesc('id')->update(['assign_to' => 0, 'is_filled' => 0]);
+
+                CylinderEmpty::create([
+                    'type' => 1,
+                    'cylinder_type' => 1,
+                    'customer_id' => $customer_id,
+                    'order_id' => $order_id,
+                    'quantity' => $commercial,
+                ]);
+            }
+        }
+
+        if ($domestic != '' || $domestic != 0) {
+            if ($domestic > 0 ) {
+                Cylinder::where([
+                    'assign_to' => $customer_id,
+                    'type' => 2
+                ])->limit($domestic)->orderByDesc('id')->update(['assign_to' => 0, 'is_filled' => 0]);
+
+                CylinderEmpty::create([
+                    'type' => 1,
+                    'cylinder_type' => 2,
+                    'customer_id' => $customer_id,
+                    'order_id' => $order_id,
+                    'quantity' => $domestic,
+                ]);
+            }
+        }
+
+        if ($domestic6 != '' || $domestic6 != 0) {
+            if ($domestic6 > 0 ) {
+                Cylinder::where([
+                    'assign_to' => $customer_id,
+                    'type' => 3
+                ])->limit($domestic6)->orderByDesc('id')->update(['assign_to' => 0, 'is_filled' => 0]);
+
+                CylinderEmpty::create([
+                    'type' => 1,
+                    'cylinder_type' => 3,
+                    'customer_id' => $customer_id,
+                    'order_id' => $order_id,
+                    'quantity' => $domestic6,
+                ]);
+            }
+        }
+
+        if ($domestic10 != '' || $domestic10 != 0) {
+            if ($domestic10 > 0 ) {
+                Cylinder::where([
+                    'assign_to' => $customer_id,
+                    'type' => 4
+                ])->limit($domestic10)->orderByDesc('id')->update(['assign_to' => 0, 'is_filled' => 0]);
+
+                CylinderEmpty::create([
+                    'type' => 1,
+                    'cylinder_type' => 4,
+                    'customer_id' => $customer_id,
+                    'order_id' => $order_id,
+                    'quantity' => $domestic10,
+                ]);
+            }
+        }
+
+        if ($amount != '' || $amount != 0) {
+            if ($amount > 0) {
+                Payment::create([
+                    'order_id' => $order_id,
+                    'order_type' => 2,
+                    'customer_id' => $customer_id,
+                    'payment' => $amount
+                ]);
+            }
+        }
+
+        return response()->json(['status' => 1, 'message' => 'Payment and empties are recieved.']);
     }
 }

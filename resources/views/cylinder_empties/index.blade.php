@@ -4,9 +4,13 @@
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header pb-0">
-                <a href="{{ route('orders.create') }}" class="btn btn-icon btn-3 btn-primary float-end" type="button">
+                <a href="{{ route('empties.create') }}" class="btn btn-icon btn-3 btn-danger float-end" type="button">
                 <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
-                <span class="btn-inner--text">Add</span>
+                <span class="btn-inner--text">Give</span>
+                </a>
+                <a href="{{ route('empties.recieve') }}" class="me-2 btn btn-icon btn-3 btn-success float-end" type="button">
+                <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
+                <span class="btn-inner--text">Recieve</span>
                 </a>
                 <h6>Empties At Customers</h6>
             </div>
@@ -31,27 +35,12 @@
                             @foreach ($records as $key => $record)
                             <tr>
                                 <td class="align-middle">
-                                    {{-- @if ($record->status != 1)
-                                    <a href="javascript:;" onclick="confirmFunction({{ $record->order_id }})" class="text-primary font-weight-bold text-xs me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Confirm Order">
-                                    <i class="fas fa-solid fa-check"></i>
-                                    </a>
-                                    @endif
-                                    <a href="{{ route('orders.show', $record->order_id) }}" class="text-primary font-weight-bold text-xs me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Show Order">
+                                    <a href="{{ route('empties.show', $record->customer_id) }}" class="text-primary font-weight-bold text-xs me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Show Reocrd">
                                     <i class="fas fa-eye"></i>
                                     </a>
-                                    @if ($record->status != 3)
-                                    <a href="javascript:;" onclick="deleteFunction({{ $record->order_id }})" class="text-danger font-weight-bold text-xs me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Cancel Order">
-                                    <i class="fas fa-trash"></i>
-                                    </a>
-                                    @endif
-                                    <form id="confirmForm{{ $record->order_id }}" method="POST" action="{{ route('orders.confirm', $record->order_id) }}">
-                                        @csrf
-                                        @method('PUT')
-                                    </form>
-                                    <form id="deleteForm{{ $record->order_id  }}" method="POST" action="{{ route('orders.destroy', $record->order_id) }}">
-                                        @csrf
-                                        @method('DELETE')
-                                    </form> --}}
+                                    {{-- <a href="{{ route('empties.edit', $record->customer_id) }}" class="text-primary font-weight-bold text-xs me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Record">
+                                    <i class="fas fa-edit"></i>
+                                    </a> --}}
                                 </td>
                                 <td class="align-middle text-center">
                                     <span class="text-secondary text-xs font-weight-bold">{{ $key + 1 }}</span>
